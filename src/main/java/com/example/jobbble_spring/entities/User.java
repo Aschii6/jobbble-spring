@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
+import java.util.UUID;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -11,13 +13,13 @@ import lombok.*;
 @Table(name = "users")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false)
-    private Long id;
+    private UUID id;
 
-    @Size(min = 4, max = 50, message = "Name must be between 4 and 50 characters")
-    @Column(name = "name", nullable = false)
-    private String name;
+    @Size(min = 4, max = 50, message = "Username must be between 4 and 50 characters")
+    @Column(name = "name", nullable = false, unique = true)
+    private String username;
 
     @Column(name = "email", nullable = false, unique = true)
     private String email;

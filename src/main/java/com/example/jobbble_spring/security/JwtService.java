@@ -26,8 +26,7 @@ public class JwtService {
 
     public String generateToken(User user) {
         return Jwts.builder()
-                .subject(user.getEmail())
-                .claim("email", user.getEmail())
+                .subject(user.getUsername())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + expirationTimeSeconds * 1000))
                 .signWith(secretKey)
@@ -36,32 +35,20 @@ public class JwtService {
 
     public boolean validateToken(String token, UserDetails userDetails) {
         try {
-            String email = extractEmail(token);
-            return email.equals(userDetails.getUsername()) && !isTokenExpired(token);
+            String username = extractUsername(token);
+            return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
         } catch (Exception e) {
             return false;
         }
     }
 
-    /*public boolean validateToken(String token) {
-        try {
-            Jwts.parser()
-                    .verifyWith(secretKey)
-                    .build()
-                    .parseSignedClaims(token);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }*/
-
-    public String extractEmail(String token) {
+    public String extractUsername(String token) {
         return Jwts.parser()
                 .verifyWith(secretKey)
                 .build()
                 .parseSignedClaims(token)
                 .getPayload()
-                .get("email", String.class);
+                .getSubject();
     }
 
     private boolean isTokenExpired(String token) {

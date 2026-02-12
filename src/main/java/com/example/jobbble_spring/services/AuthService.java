@@ -22,8 +22,8 @@ public class AuthService {
     private PasswordEncoder passwordEncoder;
 
     public String register(User user) {
-        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
-            throw new RuntimeException("Email already in use");
+        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
+            throw new RuntimeException("Username is taken");
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         User savedUser = userRepository.save(user);
@@ -35,7 +35,7 @@ public class AuthService {
                 new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword())
         );
         if (auth.isAuthenticated()) {
-            User loggedInUser = userRepository.findByEmail(user.getEmail())
+            User loggedInUser = userRepository.findByUsername(user.getUsername())
                     .orElseThrow(() -> new RuntimeException("User not found"));
             return jwtService.generateToken(loggedInUser);
         } else {
