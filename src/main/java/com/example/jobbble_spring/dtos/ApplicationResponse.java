@@ -1,4 +1,4 @@
-package com.example.jobbble_spring.dto;
+package com.example.jobbble_spring.dtos;
 
 import com.example.jobbble_spring.entities.enums.ApplicationStatus;
 import lombok.AllArgsConstructor;
@@ -11,6 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 public class ApplicationResponse {
+    private Long id;
     private String title;
     private String description;
     private ApplicationStatus status;

@@ -1,6 +1,6 @@
 package com.example.jobbble_spring.controllers;
 
-import com.example.jobbble_spring.dto.CompanyResponse;
+import com.example.jobbble_spring.dtos.CompanyResponse;
 import com.example.jobbble_spring.entities.Company;
 import com.example.jobbble_spring.services.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,6 @@ public class CompanyController {
 
     @PostMapping
     public CompanyResponse createCompany(@RequestBody Company company) {
-        System.out.println("Received company: " + company);
         return companyService.createCompany(company);
     }
 }

@@ -1,4 +1,4 @@
-package com.example.jobbble_spring.dto;
+package com.example.jobbble_spring.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,6 +11,7 @@ import java.time.LocalTime;
 @AllArgsConstructor
 @Data
 public class ApplicationStepResponse {
+    private Long id;
     private String title;
     private String description;
     private LocalDate date;

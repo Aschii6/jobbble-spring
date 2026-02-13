@@ -30,7 +30,7 @@ public class Application {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    private ApplicationStatus status;
+    private ApplicationStatus status = ApplicationStatus.NONE;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)

@@ -1,4 +1,4 @@
-package com.example.jobbble_spring.dto;
+package com.example.jobbble_spring.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class CompanyResponse {
+    private Long id;
     private String name;
     private String description;
     private String location;

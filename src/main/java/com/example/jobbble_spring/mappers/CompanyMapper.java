@@ -1,6 +1,6 @@
 package com.example.jobbble_spring.mappers;
 
-import com.example.jobbble_spring.dto.CompanyResponse;
+import com.example.jobbble_spring.dtos.CompanyResponse;
 import com.example.jobbble_spring.entities.Company;
 import org.mapstruct.Mapper;
 
