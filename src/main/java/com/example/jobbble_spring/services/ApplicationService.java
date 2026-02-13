@@ -2,7 +2,9 @@ package com.example.jobbble_spring.services;
 
 import com.example.jobbble_spring.dtos.ApplicationRequest;
 import com.example.jobbble_spring.dtos.ApplicationResponse;
+import com.example.jobbble_spring.dtos.ApplicationStepRequest;
 import com.example.jobbble_spring.entities.Application;
+import com.example.jobbble_spring.entities.ApplicationStep;
 import com.example.jobbble_spring.entities.Company;
 import com.example.jobbble_spring.entities.User;
 import com.example.jobbble_spring.mappers.ApplicationMapper;
@@ -44,5 +46,19 @@ public class ApplicationService {
         application.setCompany(company);
         Application savedApplication = applicationRepository.save(application);
         return applicationMapper.toResponse(savedApplication);
+    }
+
+    public ApplicationResponse addApplicationStep(Long applicationId, ApplicationStepRequest applicationStepRequest) {
+        // Security check or maybe find by id and username
+
+        Application application = applicationRepository.findById(applicationId)
+                .orElseThrow(() -> new RuntimeException("Application not found"));
+
+        ApplicationStep applicationStep = applicationMapper.toStepEntity(applicationStepRequest);
+        applicationStep.setApplication(application);
+
+        application.getSteps().add(applicationStep);
+        Application updatedApplication = applicationRepository.save(application);
+        return applicationMapper.toResponse(updatedApplication);
     }
 }
