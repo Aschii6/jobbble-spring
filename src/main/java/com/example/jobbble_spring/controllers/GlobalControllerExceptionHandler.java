@@ -48,4 +48,9 @@ public class GlobalControllerExceptionHandler {
         }
         return ResponseEntity.unprocessableContent().body(errorMessage.toString());
     }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<String> handleRuntimeException(RuntimeException ex) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred: " + ex.getMessage());
+    }
 }

@@ -3,6 +3,7 @@ package com.example.jobbble_spring.controllers;
 import com.example.jobbble_spring.entities.User;
 import com.example.jobbble_spring.services.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

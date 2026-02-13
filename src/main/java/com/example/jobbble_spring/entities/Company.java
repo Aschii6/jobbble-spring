@@ -34,4 +34,8 @@ public class Company {
     @Size(max = 50, message = "Logo URL must be less than 50 characters")
     @Column(name = "logo_url", nullable = false)
     private String logoUrl;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User owner;
 }

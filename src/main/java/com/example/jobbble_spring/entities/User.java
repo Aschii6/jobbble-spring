@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @NoArgsConstructor
@@ -19,7 +20,7 @@ public class User {
     private UUID id;
 
     @Size(min = 4, max = 50, message = "Username must be between 4 and 50 characters")
-    @Column(name = "name", nullable = false, unique = true)
+    @Column(name = "username", nullable = false, unique = true)
     private String username;
 
     @Email(message = "Invalid email")
@@ -28,4 +29,7 @@ public class User {
 
     @Column(name = "password", nullable = false)
     private String password;
+
+    @OneToMany(mappedBy = "owner")
+    private List<Company> companies;
 }
