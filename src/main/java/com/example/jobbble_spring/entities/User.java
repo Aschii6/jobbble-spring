@@ -30,6 +30,9 @@ public class User {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @OneToMany(mappedBy = "owner")
+    @OneToMany(mappedBy = "addedBy")
     private List<Company> companies;
+
+    @OneToMany(mappedBy = "applicant")
+    private List<Application> applications;
 }

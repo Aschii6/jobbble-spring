@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
+import java.util.List;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -37,5 +39,8 @@ public class Company {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private User owner;
+    private User addedBy;
+
+    @OneToMany(mappedBy = "company")
+    private List<Application> applications;
 }
