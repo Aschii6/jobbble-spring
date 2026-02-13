@@ -6,6 +6,7 @@ import com.example.jobbble_spring.entities.User;
 import com.example.jobbble_spring.mappers.CompanyMapper;
 import com.example.jobbble_spring.repositories.CompanyRepository;
 import com.example.jobbble_spring.repositories.UserRepository;
+import com.example.jobbble_spring.utils.CurrentUserUtils;
 import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -21,37 +22,24 @@ public class CompanyService {
     @Autowired
     private CompanyRepository companyRepository;
     @Autowired
-    private UserRepository userRepository;
-    @Autowired
     private CompanyMapper companyMapper;
+    @Autowired
+    private CurrentUserUtils currentUserUtils;
 
-    public List<CompanyResponse> getAllOwnerCompanies() {
-        User currentUser = getCurrentUser();
+    public List<CompanyResponse> getAllUserCompanies() {
+        User currentUser = currentUserUtils.getCurrentUser();
 
-        return companyRepository.findAllByOwner(currentUser)
+        return companyRepository.findAllByCreator(currentUser)
                 .stream()
                 .map(companyMapper::toResponse)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public CompanyResponse createCompany(Company company) {
-        User currentUser = getCurrentUser();
+        User currentUser = currentUserUtils.getCurrentUser();
 
-        company.setOwner(currentUser);
+        company.setCreator(currentUser);
         Company savedCompany = companyRepository.save(company);
         return companyMapper.toResponse(savedCompany);
-    }
-
-    private @NonNull User getCurrentUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()) {
-            throw new RuntimeException("User is not authenticated.");
-        }
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        if (userDetails == null) {
-            throw new RuntimeException("User details not found.");
-        }
-        return userRepository.findByUsername(userDetails.getUsername())
-                .orElseThrow(() -> new RuntimeException("User not found."));
     }
 }

@@ -30,9 +30,10 @@ public class User {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @OneToMany(mappedBy = "addedBy")
+    // Creator as in creator of the record
+    @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
     private List<Company> companies;
 
-    @OneToMany(mappedBy = "applicant")
+    @OneToMany(mappedBy = "applicant", cascade = CascadeType.ALL)
     private List<Application> applications;
 }

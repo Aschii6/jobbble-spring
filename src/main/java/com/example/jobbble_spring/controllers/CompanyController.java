@@ -19,8 +19,8 @@ public class CompanyController {
     private CompanyService companyService;
 
     @GetMapping
-    public List<CompanyResponse> getAllOwnerCompanies() {
-        return companyService.getAllOwnerCompanies();
+    public List<CompanyResponse> getAllUserCompanies() {
+        return companyService.getAllUserCompanies();
     }
 
     @PostMapping
