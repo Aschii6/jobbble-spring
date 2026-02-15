@@ -13,19 +13,11 @@ public class AuthController {
 
     @PostMapping("/register")
     public String register(@RequestBody User user) {
-        try {
-            return authService.register(user);
-        } catch (RuntimeException e) {
-            return e.getMessage();
-        }
+        return authService.register(user);
     }
 
     @PostMapping("/login")
     public String login(@RequestBody User user) {
-        try {
-            return authService.login(user);
-        } catch (RuntimeException e) {
-            return e.getMessage();
-        }
+        return authService.login(user);
     }
 }

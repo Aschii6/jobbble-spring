@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
+import java.util.List;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -34,4 +36,11 @@ public class Company {
     @Size(max = 50, message = "Logo URL must be less than 50 characters")
     @Column(name = "logo_url", nullable = false)
     private String logoUrl;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User creator; // The user who created the record
+
+    @OneToMany(mappedBy = "company")
+    private List<Application> applications;
 }
