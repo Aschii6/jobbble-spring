@@ -38,7 +38,7 @@ public class ApplicationService {
 
     public ApplicationResponse createApplication(ApplicationRequest applicationRequest) {
         User currentUser = currentUserUtils.getCurrentUser();
-        Company company = companyRepository.findById(applicationRequest.getCompanyId())
+        Company company = companyRepository.findByIdAndCreator(applicationRequest.getCompanyId(), currentUser)
                 .orElseThrow(() -> new RuntimeException("Company not found"));
 
         Application application = applicationMapper.toEntity(applicationRequest);
@@ -49,9 +49,9 @@ public class ApplicationService {
     }
 
     public ApplicationResponse addApplicationStep(Long applicationId, ApplicationStepRequest applicationStepRequest) {
-        // Security check or maybe find by id and username
+        User currentUser = currentUserUtils.getCurrentUser();
 
-        Application application = applicationRepository.findById(applicationId)
+        Application application = applicationRepository.findByIdAndApplicant(applicationId, currentUser)
                 .orElseThrow(() -> new RuntimeException("Application not found"));
 
         ApplicationStep applicationStep = applicationMapper.toStepEntity(applicationStepRequest);
