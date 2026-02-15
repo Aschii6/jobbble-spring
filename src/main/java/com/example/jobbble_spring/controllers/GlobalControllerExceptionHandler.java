@@ -7,36 +7,41 @@ import com.example.jobbble_spring.exceptions.WeakPasswordException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.Set;
 
 @ControllerAdvice
 public class GlobalControllerExceptionHandler {
     @ExceptionHandler(MisformattedEmailException.class)
-    public ResponseEntity<String> handleMisformattedEmail(MisformattedEmailException ex) {
-        return ResponseEntity.unprocessableContent().body(ex.getMessage());
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_CONTENT)
+    public String handleMisformattedEmail(MisformattedEmailException ex) {
+        return ex.getMessage();
     }
 
     @ExceptionHandler(WeakPasswordException.class)
-    public ResponseEntity<String> handleWeakPassword(WeakPasswordException ex) {
-        return ResponseEntity.unprocessableContent().body(ex.getMessage());
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_CONTENT)
+    public String handleWeakPassword(WeakPasswordException ex) {
+        return ex.getMessage();
     }
 
     @ExceptionHandler(TakenUsernameException.class)
-    public ResponseEntity<String> handleTakenUsername(TakenUsernameException ex) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public String handleTakenUsername(TakenUsernameException ex) {
+        return ex.getMessage();
     }
 
     @ExceptionHandler(InvalidLoginException.class)
-    public ResponseEntity<String> handleInvalidLogin(InvalidLoginException ex) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public String handleInvalidLogin(InvalidLoginException ex) {
+        return ex.getMessage();
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<String> handleConstraintViolation(ConstraintViolationException ex) {
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_CONTENT)
+    public String handleConstraintViolation(ConstraintViolationException ex) {
         Set<ConstraintViolation<?>> violations = ex.getConstraintViolations();
 
         StringBuilder errorMessage = new StringBuilder();
@@ -46,11 +51,12 @@ public class GlobalControllerExceptionHandler {
         if (!errorMessage.isEmpty()) {
             errorMessage.setLength(errorMessage.length() - 2);
         }
-        return ResponseEntity.unprocessableContent().body(errorMessage.toString());
+        return errorMessage.toString();
     }
 
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<String> handleRuntimeException(RuntimeException ex) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred: " + ex.getMessage());
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public String handleRuntimeException(RuntimeException ex) {
+        return "An unexpected error occurred: " + ex.getMessage();
     }
 }

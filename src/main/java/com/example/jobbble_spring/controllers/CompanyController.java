@@ -4,11 +4,8 @@ import com.example.jobbble_spring.dtos.CompanyResponse;
 import com.example.jobbble_spring.entities.Company;
 import com.example.jobbble_spring.services.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,6 +21,7 @@ public class CompanyController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public CompanyResponse createCompany(@RequestBody Company company) {
         return companyService.createCompany(company);
     }
