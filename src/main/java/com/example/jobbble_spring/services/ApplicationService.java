@@ -7,6 +7,7 @@ import com.example.jobbble_spring.entities.Application;
 import com.example.jobbble_spring.entities.ApplicationStep;
 import com.example.jobbble_spring.entities.Company;
 import com.example.jobbble_spring.entities.User;
+import com.example.jobbble_spring.exceptions.NotFoundException;
 import com.example.jobbble_spring.mappers.ApplicationMapper;
 import com.example.jobbble_spring.repositories.ApplicationRepository;
 import com.example.jobbble_spring.repositories.CompanyRepository;
@@ -39,7 +40,7 @@ public class ApplicationService {
     public ApplicationResponse createApplication(ApplicationRequest applicationRequest) {
         User currentUser = currentUserUtils.getCurrentUser();
         Company company = companyRepository.findByIdAndCreator(applicationRequest.getCompanyId(), currentUser)
-                .orElseThrow(() -> new RuntimeException("Company not found"));
+                .orElseThrow(() -> new NotFoundException("Company not found"));
 
         Application application = applicationMapper.toEntity(applicationRequest);
         application.setApplicant(currentUser);
@@ -52,7 +53,7 @@ public class ApplicationService {
         User currentUser = currentUserUtils.getCurrentUser();
 
         Application application = applicationRepository.findByIdAndApplicant(applicationId, currentUser)
-                .orElseThrow(() -> new RuntimeException("Application not found"));
+                .orElseThrow(() -> new NotFoundException("Application not found"));
 
         ApplicationStep applicationStep = applicationMapper.toStepEntity(applicationStepRequest);
         applicationStep.setApplication(application);

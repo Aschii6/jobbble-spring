@@ -1,47 +1,71 @@
 package com.example.jobbble_spring.controllers;
 
-import com.example.jobbble_spring.exceptions.InvalidLoginException;
-import com.example.jobbble_spring.exceptions.MisformattedEmailException;
-import com.example.jobbble_spring.exceptions.TakenUsernameException;
-import com.example.jobbble_spring.exceptions.WeakPasswordException;
+import com.example.jobbble_spring.exceptions.*;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.web.firewall.RequestRejectedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.Set;
 
 @ControllerAdvice
 public class GlobalControllerExceptionHandler {
     @ExceptionHandler(MisformattedEmailException.class)
-    @ResponseStatus(HttpStatus.UNPROCESSABLE_CONTENT)
-    public String handleMisformattedEmail(MisformattedEmailException ex) {
-        return ex.getMessage();
+    public ResponseEntity<String> handleMisformattedEmail(MisformattedEmailException ex) {
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_CONTENT).body(ex.getMessage());
     }
 
     @ExceptionHandler(WeakPasswordException.class)
-    @ResponseStatus(HttpStatus.UNPROCESSABLE_CONTENT)
-    public String handleWeakPassword(WeakPasswordException ex) {
-        return ex.getMessage();
+    public ResponseEntity<String> handleWeakPassword(WeakPasswordException ex) {
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_CONTENT).body(ex.getMessage());
     }
 
     @ExceptionHandler(TakenUsernameException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public String handleTakenUsername(TakenUsernameException ex) {
-        return ex.getMessage();
+    public ResponseEntity<String> handleTakenUsername(TakenUsernameException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
 
     @ExceptionHandler(InvalidLoginException.class)
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public String handleInvalidLogin(InvalidLoginException ex) {
-        return ex.getMessage();
+    public ResponseEntity<String> handleInvalidLogin(InvalidLoginException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<String> handleNotFound(NotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<String> handleRuntimeException(RuntimeException ex) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("An unexpected error occurred: " + ex.getMessage());
+    }
+
+    // Framework exceptions
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<String> handleBadCredentials(BadCredentialsException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password.");
+    }
+
+    @ExceptionHandler(ExpiredJwtException.class)
+    public ResponseEntity<String> handleExpiredJwt(ExpiredJwtException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Your session has expired.");
+    }
+
+    @ExceptionHandler(RequestRejectedException.class)
+    public ResponseEntity<String> handleRequestRejected(RequestRejectedException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid request: " + ex.getMessage());
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    @ResponseStatus(HttpStatus.UNPROCESSABLE_CONTENT)
-    public String handleConstraintViolation(ConstraintViolationException ex) {
+    public ResponseEntity<String> handleConstraintViolation(ConstraintViolationException ex) {
         Set<ConstraintViolation<?>> violations = ex.getConstraintViolations();
 
         StringBuilder errorMessage = new StringBuilder();
@@ -51,12 +75,12 @@ public class GlobalControllerExceptionHandler {
         if (!errorMessage.isEmpty()) {
             errorMessage.setLength(errorMessage.length() - 2);
         }
-        return errorMessage.toString();
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_CONTENT).body(errorMessage.toString());
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public String handleRuntimeException(RuntimeException ex) {
-        return "An unexpected error occurred: " + ex.getMessage();
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<String> handleDataIntegrityViolation(DataIntegrityViolationException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body("Data integrity violation: " + ex.getMostSpecificCause().getMessage());
     }
 }
