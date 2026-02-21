@@ -17,7 +17,7 @@ public class Company {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Size(min = 6, max = 50, message = "Company name must be between 6 and 50 characters")
+    @Size(min = 4, max = 50, message = "Company name must be between 4 and 50 characters")
     @Column(name = "name", nullable = false)
     private String name;
 
@@ -33,7 +33,7 @@ public class Company {
     @Column(name = "website_url", nullable = false)
     private String websiteUrl;
 
-    @Size(max = 50, message = "Logo URL must be less than 50 characters")
+    @Size(max = 80, message = "Logo URL must be less than 80 characters")
     @Column(name = "logo_url", nullable = false)
     private String logoUrl;
 

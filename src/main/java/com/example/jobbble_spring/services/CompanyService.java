@@ -3,6 +3,7 @@ package com.example.jobbble_spring.services;
 import com.example.jobbble_spring.dtos.CompanyResponse;
 import com.example.jobbble_spring.entities.Company;
 import com.example.jobbble_spring.entities.User;
+import com.example.jobbble_spring.exceptions.NotFoundException;
 import com.example.jobbble_spring.mappers.CompanyMapper;
 import com.example.jobbble_spring.repositories.CompanyRepository;
 import com.example.jobbble_spring.utils.CurrentUserUtils;
@@ -35,5 +36,21 @@ public class CompanyService {
         company.setCreator(currentUser);
         Company savedCompany = companyRepository.save(company);
         return companyMapper.toResponse(savedCompany);
+    }
+
+    public CompanyResponse getCompanyById(Long id) {
+        User currentUser = currentUserUtils.getCurrentUser();
+
+        Company company = companyRepository.findByIdAndCreator(id, currentUser)
+                .orElseThrow(() -> new NotFoundException("Company not found."));
+        return companyMapper.toResponse(company);
+    }
+
+    public void deleteCompany(Long id) {
+        User currentUser = currentUserUtils.getCurrentUser();
+
+        Company company = companyRepository.findByIdAndCreator(id, currentUser)
+                .orElseThrow(() -> new NotFoundException("Company not found."));
+        companyRepository.delete(company);
     }
 }

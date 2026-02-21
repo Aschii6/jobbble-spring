@@ -20,9 +20,19 @@ public class CompanyController {
         return companyService.getAllUserCompanies();
     }
 
+    @GetMapping("/{id}")
+    public CompanyResponse getCompanyById(@PathVariable Long id) {
+        return companyService.getCompanyById(id);
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public CompanyResponse createCompany(@RequestBody Company company) {
         return companyService.createCompany(company);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteCompany(@PathVariable Long id) {
+        companyService.deleteCompany(id);
     }
 }
