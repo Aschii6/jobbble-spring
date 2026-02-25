@@ -62,4 +62,40 @@ public class ApplicationService {
         Application updatedApplication = applicationRepository.save(application);
         return applicationMapper.toResponse(updatedApplication);
     }
+
+    public ApplicationResponse getApplicationById(Long id) {
+        User currentUser = currentUserUtils.getCurrentUser();
+
+        Application application = applicationRepository.findByIdAndApplicant(id, currentUser)
+                .orElseThrow(() -> new NotFoundException("Application not found."));
+        return applicationMapper.toResponse(application);
+    }
+
+    public void deleteApplication(Long id) {
+        User currentUser = currentUserUtils.getCurrentUser();
+
+        Application application = applicationRepository.findByIdAndApplicant(id, currentUser)
+                .orElseThrow(() -> new NotFoundException("Application not found."));
+        applicationRepository.delete(application);
+    }
+
+    public ApplicationResponse updateApplication(Long id, ApplicationRequest applicationRequest) {
+        User currentUser = currentUserUtils.getCurrentUser();
+
+        Application application = applicationRepository.findByIdAndApplicant(id, currentUser)
+                .orElseThrow(() -> new NotFoundException("Application not found."));
+
+        if (applicationRequest.getTitle() != null) {
+            application.setTitle(applicationRequest.getTitle());
+        }
+        if (applicationRequest.getDescription() != null) {
+            application.setDescription(applicationRequest.getDescription());
+        }
+        if (applicationRequest.getStatus() != null) {
+            application.setStatus(applicationRequest.getStatus());
+        }
+
+        Application updatedApplication = applicationRepository.save(application);
+        return applicationMapper.toResponse(updatedApplication);
+    }
 }
