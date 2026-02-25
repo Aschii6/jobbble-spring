@@ -6,7 +6,6 @@ import com.example.jobbble_spring.dtos.ApplicationStepRequest;
 import com.example.jobbble_spring.services.ApplicationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,10 +21,25 @@ public class ApplicationController {
         return applicationService.getAllUserApplications();
     }
 
+    @GetMapping("/{id}")
+    public ApplicationResponse getApplicationById(@PathVariable Long id) {
+        return applicationService.getApplicationById(id);
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ApplicationResponse createApplication(@RequestBody ApplicationRequest applicationRequest) {
         return applicationService.createApplication(applicationRequest);
+    }
+
+    @PutMapping("/{id}")
+    public ApplicationResponse updateApplication(@PathVariable Long id, @RequestBody ApplicationRequest applicationRequest) {
+        return applicationService.updateApplication(id, applicationRequest);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteApplication(@PathVariable Long id) {
+        applicationService.deleteApplication(id);
     }
 
     @PostMapping("/{applicationId}/steps")
